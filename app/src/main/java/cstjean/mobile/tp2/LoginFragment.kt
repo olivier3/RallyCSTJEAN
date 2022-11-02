@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -43,8 +44,10 @@ class LoginFragment : Fragment() {
         binding.apply {
             if(user == null) {
                 btnConnexion.setText(R.string.connexion)
+                btnDemarrer.visibility = View.INVISIBLE
             } else {
                 btnConnexion.setText(R.string.deconnexion)
+                btnDemarrer.visibility = View.VISIBLE
             }
 
             btnConnexion.setOnClickListener {
@@ -66,7 +69,12 @@ class LoginFragment : Fragment() {
                     btnConnexion.setText(R.string.connexion)
                     context?.let { it1 -> AuthUI.getInstance().signOut(it1) }
                     user = null
+                    btnVisibility()
                 }
+            }
+
+            btnDemarrer.setOnClickListener {
+                findNavController().navigate(R.id.mapFragment)
             }
         }
     }
@@ -82,12 +90,21 @@ class LoginFragment : Fragment() {
             // Successfully signed in
             binding.btnConnexion.setText(R.string.deconnexion)
             user = FirebaseAuth.getInstance().currentUser
+            btnVisibility()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
             // ...
             Log.e("TAG-ERROR", response?.error?.errorCode.toString())
+        }
+    }
+
+    private fun btnVisibility() {
+        if (binding.btnDemarrer.visibility == View.VISIBLE) {
+            binding.btnDemarrer.visibility = View.INVISIBLE
+        } else {
+            binding.btnDemarrer.visibility = View.VISIBLE
         }
     }
 }

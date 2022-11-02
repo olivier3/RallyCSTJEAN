@@ -9,5 +9,15 @@
         android:id="@+id/loginFragment"
         android:name="cstjean.mobile.tp2.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login"/>
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_mapFragment2"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="cstjean.mobile.tp2.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+
 </navigation>
