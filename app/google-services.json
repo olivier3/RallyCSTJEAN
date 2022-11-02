@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "125050437959",
+    "project_id": "mobile-tp2-rallycstjean",
+    "storage_bucket": "mobile-tp2-rallycstjean.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125050437959:android:a764fb8517c5cf08158c62",
+        "android_client_info": {
+          "package_name": "cstjean.mobile.tp2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125050437959-l8l5j0o5p08tsvgg1bfpl142ti92prv3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe21TXiF18Gul3ak8huuqU0wiNkFRf2u8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "125050437959-l8l5j0o5p08tsvgg1bfpl142ti92prv3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

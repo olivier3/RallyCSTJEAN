@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">tp2</string>
     <string name="connexion">Connexion</string>
+    <string name="deconnexion">Déconnexion</string>
     <string name="rallycstjean">RallyCSTJEAN</string>
     <string name="logo_entreprise">Logo de l\'entreprise</string>
+    <string name="google_web_client_id">125050437959-m9ic2n6avjqsf8k68f7g11k74ohu65gq.apps.googleusercontent.com</string>
+    <string name="demarrer">Démarrer la course</string>
 </resources>
