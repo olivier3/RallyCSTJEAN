@@ -13,7 +13,6 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import cstjean.mobile.tp2.databinding.FragmentLoginBinding
-import kotlin.math.log
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
