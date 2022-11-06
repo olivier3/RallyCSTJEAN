@@ -3,32 +3,36 @@ package cstjean.mobile.tp2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import java.util.concurrent.TimeUnit
 
 private const val REQUESTING_LOCATION_UPDATES_KEY = "REQUESTING_LOCATION_UPDATES_KEY"
 
 class MapFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val cstjean = LatLng(45.2974, -73.2687)
+    private val pizzeria = LatLng(45.29385261757588, -73.2562410613452)
+    private val bistro = LatLng(45.310058584648196, -73.25235153065181)
+    private val garnison = LatLng(45.30101075522801, -73.28109380181546)
+
+    private var markersArr = arrayOf<Marker>()
 
     /**
      * Propriété global pour Google map.
@@ -88,44 +92,37 @@ class MapFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
-        val cstjean = LatLng(45.2974, -73.2687)
-        val pizzeria = LatLng(45.29385261757588, -73.2562410613452)
-        val bistro = LatLng(45.310058584648196, -73.25235153065181)
-        val garnison = LatLng(45.30101075522801, -73.28109380181546)
         map = googleMap
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(cstjean, 14.0f))
         map.addMarker(
             MarkerOptions()
                 .position(pizzeria)
                 .title("Checkpoint")
-        )
+        )?.let { markersArr += it }
         map.addCircle(
             CircleOptions()
                 .center(pizzeria)
                 .radius(100.0)
-                .strokeColor(Color.RED)
         )
         map.addMarker(
             MarkerOptions()
                 .position(bistro)
                 .title("Checkpoint")
-        )
+        )?.let { markersArr += it }
         map.addCircle(
             CircleOptions()
                 .center(bistro)
                 .radius(100.0)
-                .strokeColor(Color.RED)
         )
         map.addMarker(
             MarkerOptions()
                 .position(garnison)
                 .title("Checkpoint")
-        )
+        )?.let { markersArr += it }
         map.addCircle(
             CircleOptions()
                 .center(garnison)
                 .radius(100.0)
-                .strokeColor(Color.RED)
         )
 
         if(isPermissionGranted()) {
@@ -158,9 +155,14 @@ class MapFragment : Fragment() {
         ).setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(3))
             .build()
 
+        val checkpointArr = arrayOf(pizzeria, bistro, garnison)
+
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { showLocation(it) }
+                locationResult.lastLocation?.let {
+                    showLocation(it)
+                    distanceToObjective(it, checkpointArr)
+                }
             }
         }
     }
@@ -206,6 +208,22 @@ class MapFragment : Fragment() {
         if (requestingLocationUpdates) startLocationUpdates()
     }
 
+    private fun distanceToObjective(location: Location, checkpointArr: Array<LatLng>) {
+        val distance = FloatArray(1)
+        checkpointArr.forEach {
+            Location.distanceBetween(location.latitude, location.longitude,
+                it.latitude, it.longitude, distance)
+
+            if (distance[0] <= 100.0) {
+                markersArr.forEach { marker ->
+                    if (marker.position == it) {
+                        updateMarker(marker)
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Méthode qui retourne l'état de la permission.
      */
@@ -242,6 +260,11 @@ class MapFragment : Fragment() {
             Looper.getMainLooper()
         )
         requestLocationUpdates = true
+    }
+
+    private fun updateMarker(marker: Marker)
+    {
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
     }
 
     /**
